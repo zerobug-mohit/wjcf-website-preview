@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>WJCF — Working with government to strengthen India’s health systems</title>
 <meta name="description" content="WJCF works with central and state governments to identify critical health challenges, develop and demonstrate practical solutions, and support effective approaches to become part of the health system at scale.">
-<link rel="icon" type="image/png" sizes="32x32" href="_assets/brand/wjcf-tile-32.png">
-<link rel="apple-touch-icon" sizes="180x180" href="_assets/brand/wjcf-tile-180.png">
+<link rel="icon" type="image/png" sizes="32x32" href="_assets/brand/wjcf-tile-32.png?v=5f967152">
+<link rel="apple-touch-icon" sizes="180x180" href="_assets/brand/wjcf-tile-180.png?v=972b9db3">
 <meta name="theme-color" content="#003E78">
 <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -68,7 +68,7 @@
   --field: var(--cream);
   --on-field: var(--navy);
   --on-field-2: #3B4A57;
-  /* Where the read-along starts. The paper's own hue taken dark, not a slate:
+  /* The resting ink on paper. The paper's own hue taken dark, not a slate:
      cream is a warm off-white, and this is that warmth under-inked. The ramp to
      navy then travels across temperature as well as lightness, which is what
      makes it visible while scrolling — lightness alone is capped by the 4.5:1
@@ -85,7 +85,7 @@
 /* The surfaces the browser draws: scheme and caret belong to the palette. */
 html { color-scheme: light; }
 body { caret-color: var(--turq); }
-html { -webkit-text-size-adjust: 100%; scrollbar-color: var(--turq) var(--cream-2); }
+html { -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
@@ -99,9 +99,36 @@ body {
 
 ::selection { background: var(--gold); color: var(--ink-dark); }
 :focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
-::-webkit-scrollbar { width: 13px; }
-::-webkit-scrollbar-track { background: var(--cream-2); }
-::-webkit-scrollbar-thumb { background: var(--turq); border: 3px solid var(--cream-2); }
+/* THE READING RULE, STOOD ON ITS END. The header carries a gold rule that
+   fills as the reader goes; this is its vertical twin, in the same ink on the
+   same ground, so the two surfaces the browser draws for us read as one idea
+   rather than two accidents.
+
+   THE CHANNEL IS NAVY BECAUSE GOLD CANNOT BE A MARK ON PAPER. Against the
+   pale channel this was first drawn on it measures 1.43:1, and against the
+   page's second paper 1.52:1; the floor for a control is 3:1, and that floor
+   is ours the moment we draw the bar instead of letting the browser draw it.
+   Darkening the channel does not rescue it -- a channel lighter than gold
+   would need a luminance of 1.695 and white is 1.000. On navy it measures
+   5.94:1, which is the pairing DESIGN.md already records for gold as ink.
+   White under the pointer is 10.71:1, so the grab target announces itself.
+
+   NO border ON THE THUMB. The old rule inset it with a 3px solid border in
+   the track colour, which only works while the track is one flat colour and
+   silently mis-draws the moment it is not. */
+::-webkit-scrollbar { width: 11px; }
+::-webkit-scrollbar-track { background: var(--navy); }
+::-webkit-scrollbar-thumb { background: var(--gold); }
+::-webkit-scrollbar-thumb:hover,
+::-webkit-scrollbar-thumb:active { background: var(--white); }
+::-webkit-scrollbar-corner { background: var(--navy); }
+/* FIREFOX, AND ONLY FIREFOX. These two properties are what broke the bar when
+   they sat beside the block above: Chromium honours scrollbar-color and then
+   throws the drawn bar away. Chromium matches selector(::-webkit-scrollbar),
+   so it never enters here; Firefox does not, so it does. */
+@supports not selector(::-webkit-scrollbar) {
+  html { scrollbar-width: thin; scrollbar-color: var(--gold) var(--navy); }
+}
 
 h1, h2, h3 { margin: 0; font-weight: var(--w-strong); letter-spacing: -0.034em; line-height: 0.94; text-wrap: balance; }
 h1 { font-size: clamp(43px, 7.9vw, 122px); }
@@ -516,7 +543,7 @@ strong { font-weight: var(--w-strong); }
    on, and this box is the lockup in the corner, not the screen. */
 .brand-mark .on-flood {
   position: absolute; inset: 0;
-  background: center / contain no-repeat url('_assets/brand/wjcf-mark-white.png');
+  background: center / contain no-repeat url('_assets/brand/wjcf-mark-white.png?v=d3fa78db');
   clip-path: circle(0px at var(--mx, -9999px) var(--my, -9999px));
   transition: clip-path 0.8s cubic-bezier(0.4, 0.1, 0.25, 1);
 }
@@ -538,6 +565,13 @@ strong { font-weight: var(--w-strong); }
    flood does too. */
 [data-menu='open'] .mark { opacity: 0 !important; }
 
+/* inset: 0 is the LAYOUT viewport, and on a phone that is not what you can
+   see. When the chrome retracts the visual viewport grows past it, and a
+   sheet pinned to the layout viewport comes up short -- what shows in the
+   strip it misses is the page's own cream, which is the white gap in the
+   report. Script overrides these four with the real numbers from
+   visualViewport; this stays as the answer for every browser where the two
+   rectangles are the same thing. */
 .fl-menu { position: fixed; inset: 0; z-index: 300; display: none; }
 .fl-menu[data-live] { display: block; }
 @media (min-width: 1040px) { .fl-menu { display: none !important; } }
@@ -631,8 +665,10 @@ strong { font-weight: var(--w-strong); }
 .band { background: var(--field); color: var(--on-field); padding: var(--rhythm) var(--pad); position: relative; overflow: clip; }
 /* Silkscreen has no tints: on the turquoise field the body ink prints at full
    strength, which is also the only way it clears AA over that hue. */
-/* Each field carries its own resting ink for the read-along. Turquoise is the
-   exception and the reason the ramp is a token rather than a rule: it is a
+/* Each field carries its own resting ink, measured on that ground: the margin
+   marker and the spine both take theirs from it, so it is per-field rather
+   than one value. Turquoise is the exception, and the reason it is a token
+   rather than a rule: it is a
    mid-tone, so white on it is already 5.03:1 and there is no lighter ink that
    still clears AA. It rests at its full ink, which makes the effect absent
    there instead of illegible. */
@@ -901,8 +937,8 @@ strong { font-weight: var(--w-strong); }
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  /* The field's own resting ink — the same token the read-along rests at, which
-     is measured at 4.9:1 and up on every ground. Dim, not unreadable. */
+  /* The field's own resting ink, measured at 4.9:1 and up on every ground.
+     Dim, not unreadable. */
   color: var(--mark-rest, #6B6355);
   /* No colour transition, deliberately. A row's ink changes either because the
      field changed — which happens while the marker is invisible — or because
@@ -1042,7 +1078,7 @@ strong { font-weight: var(--w-strong); }
   }
 }
 
-/* -------------------------------------------------------- the read-along */
+/* ------------------------------------------------------ arrivals, in beats */
 
 /* Body prose deepens from the field's resting ink to its full ink, word by
    word, as the block crosses the screen. The resting ink is set per field and
@@ -1114,55 +1150,11 @@ strong { font-weight: var(--w-strong); }
   .js .spine-rule { transition: transform 0.18s linear; }
 }
 
-/* Body prose and the creed both deepen from the field's resting ink to its
-   full ink, word by word, as the block crosses the screen. The resting ink is
-   set per field and measured on that ground, so the unread half of a paragraph
-   is ordinary legible body text: a reader who never scrolls past the block, or
-   whose browser never runs the script, loses nothing but the motion.
-
-   A colour ramp, never an opacity ramp. A word at 0.3 alpha is not a word. */
-.read .rw,
-.creed-m .rw { color: var(--read-rest); transition: color 0.38s var(--ease); }
-
-/* The creed is display type, so it rests at the large-text floor and the
-   unread half recedes much further than prose can. This is the whole of why
-   the effect reads more strongly here than in a paragraph: 3.50:1 against
-   5.11:1 on navy, which is the difference between quiet and barely there. */
-/* The mission is display type, so it rests at the large-text floor and its
-   unread half recedes much further than prose can: 3.50:1 against 5.11:1 on
-   navy. The vision does not take this treatment at all -- two lines is not
-   enough distance for a wave to cross, and over fourteen words the ramp reads
-   as a colour fault rather than as reading. */
-.creed-m .rw { color: var(--read-rest-lg); }
-
-/* Prose takes the same ink once the viewport has made it large text. The lede
-   is clamp(18px, 1.85vw, 30px), which reaches 24px at a 1297px viewport; below
-   that it is body text and holds the 4.5:1 floor instead. The gate measures
-   computed size and weight against the real ground, so changing that clamp
-   fails a check rather than quietly failing contrast. */
-@media (min-width: 1300px) {
-  .read .rw { color: var(--read-rest-lg); }
-}
-/* The wet edge. Four words at the head of the fill sit between the two ends, so
-   what travels through the paragraph is a gradient rather than a boundary -- a
-   boundary sweeping through text is most of why the effect was hard to see.
-
-   Mixed from the two ends rather than declared as a third token per field, so
-   the turquoise band, whose ground has no headroom for a ramp and whose rest IS
-   its full ink, gets an intermediate that is also that ink and stays the
-   deliberate no-op it already is. */
-.read .rw.wet { color: color-mix(in srgb, var(--read-rest), var(--on-field) 62%); }
-@media (min-width: 1300px) {
-  .read .rw.wet { color: color-mix(in srgb, var(--read-rest-lg), var(--on-field) 62%); }
-}
-.creed-m .rw.wet { color: color-mix(in srgb, var(--read-rest-lg), var(--on-field) 62%); }
-.read .rw.on,
-.creed-m .rw.on { color: var(--on-field); }
-@media (prefers-reduced-motion: reduce) {
-  .read .rw, .read .rw.wet, .read .rw.on,
-  .creed-m .rw, .creed-m .rw.wet, .creed-m .rw.on { color: var(--on-field); transition: none; }
-}
-
+/* Body prose and the mission are set at the field's full ink and stay there.
+   They used to deepen word by word as the block crossed the screen -- the
+   read-along, ported from v9 -- and the direction now sets its prose rather
+   than scrubbing it. The tokens the ramp rested at are still declared because
+   the margin marker and the spine take their resting ink from them. */
 
 /* --------------------------------------------------------- hero */
 
@@ -1175,17 +1167,36 @@ strong { font-weight: var(--w-strong); }
    window they came to 870 -- so thirty pixels of the next band, a pale cream,
    sat on the bottom of the first screen under the gold.
 
-   dvh and not vh. On a phone the browser's own chrome retracts as you scroll,
-   and a hero measured in vh is sized for the retracted window: it is taller
-   than what you can actually see on arrival, which puts the gold strip just
-   off the bottom of the screen it is supposed to sit on.
+   svh, AND THIS IS THE THIRD ANSWER TO THE SAME QUESTION. The unit has to
+   be the window as it is ON ARRIVAL, because the gold strip has to land on
+   the bottom edge of the first screen rather than just off it.
 
-   The fallback above it matters for the same reason in reverse -- a browser
-   without dvh gets vh, which is wrong by the height of a toolbar rather than
-   wrong by a whole band. */
+     vh   on iOS is the LARGE viewport, the window with the chrome already
+          gone. Too tall on arrival: the strip sits below the fold. This is
+          what was here first and it was wrong.
+     dvh  is the window right now, so it is right on arrival -- and it keeps
+          being right, which means the first screen GROWS as the toolbar
+          retracts and shoves all twelve bands below it down the page while
+          the reader is mid-scroll. Measured at 393x852: the document went
+          from 22957px to 23191px and every section moved. That is the
+          "disorients" in the report, and it is also why the bar looked like
+          it was changing size -- the bar is a constant 67px at every scroll
+          position, but it is translucent, so what moves behind it reads as
+          the bar moving.
+     svh  is the SMALL viewport: the window with the chrome fully shown,
+          which is the window you arrive in. Right on arrival like dvh, and
+          fixed for the life of the page like vh.
+
+   What svh gives up: once the toolbar has gone, the first screen is shorter
+   than the window and a sliver of the next band shows above the fold. The
+   reader has already scrolled past it by then -- that is what retracted the
+   toolbar -- so it is the cheapest of the three costs by a long way.
+
+   The vh above it is the fallback for anything without svh, where being
+   wrong by a toolbar beats having no height at all. */
 .screen {
   min-height: 100vh;
-  min-height: 100dvh;
+  min-height: 100svh;
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto;
 }
@@ -2421,8 +2432,14 @@ strong { font-weight: var(--w-strong); }
    there is nothing to align to and this would be 725px of navy on a phone. */
 @media (min-width: 901px) {
   .ft {
+    /* svh for the same reason the landing screen uses it: dvh is the one
+       unit that moves when browser chrome retracts, and a footer that
+       re-measures itself mid-scroll is a footer that twitches. Nothing on
+       this page sizes itself against the dynamic viewport any more. On a
+       desktop, where there is no chrome to retract, the two are the same
+       number. */
     min-height: calc(100vh - var(--nav-h) - clamp(26px, 6vh, 64px) - 54px);
-    min-height: calc(100dvh - var(--nav-h) - clamp(26px, 6vh, 64px) - 54px);
+    min-height: calc(100svh - var(--nav-h) - clamp(26px, 6vh, 64px) - 54px);
     display: flex;
     flex-direction: column;
   }
@@ -2511,8 +2528,8 @@ strong { font-weight: var(--w-strong); }
   background: center / contain no-repeat;
   transition: opacity 0.5s var(--ease);
 }
-.brand-mark .on-dark { background-image: url('_assets/brand/wjcf-mark-white.png'); }
-.brand-mark .on-light { background-image: url('_assets/brand/wjcf-mark-navy.png'); opacity: 0; }
+.brand-mark .on-dark { background-image: url('_assets/brand/wjcf-mark-white.png?v=d3fa78db'); }
+.brand-mark .on-light { background-image: url('_assets/brand/wjcf-mark-navy.png?v=23c5bc53'); opacity: 0; }
 [data-theme='light'] .brand-mark .on-dark { opacity: 0; }
 [data-theme='light'] .brand-mark .on-light { opacity: 1; }
 @media (prefers-reduced-motion: reduce) {
@@ -2554,7 +2571,7 @@ strong { font-weight: var(--w-strong); }
   width: var(--mark-w);
   aspect-ratio: 1483 / 634;
   flex-shrink: 0;
-  background: center / contain no-repeat url('_assets/brand/wjcf-mark-white.png');
+  background: center / contain no-repeat url('_assets/brand/wjcf-mark-white.png?v=d3fa78db');
 }
 .ft-mark span span { display: block; }
 .ft-mark span {
@@ -2697,7 +2714,7 @@ strong { font-weight: var(--w-strong); }
   <div class="screen">
   <section class="band band--turq hero hero--print" id="top" data-nav="dark">
     <div class="hero-print">
-      <img src="_assets/photos/hero-workers-close.jpg" width="1800" height="818" alt="Around forty health workers in matching blue saris, standing and seated in rows outside a health facility beneath a large tree."
+      <img src="_assets/photos/hero-workers-close.jpg?v=2e2be80f" width="1800" height="818" alt="Around forty health workers in matching blue saris, standing and seated in rows outside a health facility beneath a large tree."
            loading="eager" fetchpriority="high" decoding="sync">
     </div>
     <div class="inner">
@@ -2727,8 +2744,8 @@ strong { font-weight: var(--w-strong); }
   
 <section class="band band--cream2" id="about" data-lay data-nav="light" data-tab="About" data-chapter="Our story">
   <div class="inner inner--rail"><div class="lay"><h2 class="print">19 years working with India’s health system</h2>
-    <div class="read"><p class="lede"><span class="rw">William</span> <span class="rw">J.</span> <span class="rw">Clinton</span> <span class="rw">Foundation</span> <span class="rw">(WJCF)</span> <span class="rw">is</span> <span class="rw">an</span> <span class="rw">Indian</span> <span class="rw">not‑for‑profit</span> <span class="rw">organisation</span> <span class="rw">registered</span> <span class="rw">under</span> <span class="rw">Section</span> <span class="rw">8</span> <span class="rw">(previously</span> <span class="rw">Section</span> <span class="rw">25)</span> <span class="rw">of</span> <span class="rw">the</span> <span class="rw">Indian</span> <span class="rw">Companies</span> <span class="rw">Act.</span> <span class="rw">Since</span> <span class="rw">its</span> <span class="rw">incorporation</span> <span class="rw">in</span> <span class="rw">2007,</span> <span class="rw">WJCF</span> <span class="rw">has</span> <span class="rw">worked</span> <span class="rw">with</span> <span class="rw">central</span> <span class="rw">and</span> <span class="rw">state</span> <span class="rw">governments</span> <span class="rw">and</span> <span class="rw">other</span> <span class="rw">partners</span> <span class="rw">to</span> <span class="rw">improve</span> <span class="rw">health</span> <span class="rw">outcomes</span> <span class="rw">and</span> <span class="rw">strengthen</span> <span class="rw">health</span> <span class="rw">systems</span> <span class="rw">across</span> <span class="rw">India.</span></p>
-<p class="lede"><span class="rw">We</span> <span class="rw">combine</span> <span class="rw">public health</span> <span class="rw">expertise,</span> <span class="rw">evidence,</span> <span class="rw">technology</span> <span class="rw">and</span> <span class="rw">implementation</span> <span class="rw">experience</span> <span class="rw">to</span> <span class="rw">identify</span> <span class="rw">critical</span> <span class="rw">gaps,</span> <span class="rw">develop</span> <span class="rw">practical</span> <span class="rw">solutions,</span> <span class="rw">and</span> <span class="rw">support</span> <span class="rw">approaches</span> <span class="rw">that</span> <span class="rw">can</span> <span class="rw">be</span> <span class="rw">integrated</span> <span class="rw">and</span> <span class="rw">sustained</span> <span class="rw">within</span> <span class="rw">the</span> <span class="rw">health</span> <span class="rw">system.</span></p></div>
+    <div class="read"><p class="lede">William J. Clinton Foundation (WJCF) is an Indian not‑for‑profit organisation registered under Section 8 (previously Section 25) of the Indian Companies Act. Since its incorporation in 2007, WJCF has worked with central and state governments and other partners to improve health outcomes and strengthen health systems across India.</p>
+<p class="lede">We combine public health expertise, evidence, technology and implementation experience to identify critical gaps, develop practical solutions, and support approaches that can be integrated and sustained within the health system.</p></div>
     <div class="figs">
       <div class="fig">
         <div class="fig-v"><span class="vh">20</span><span class="fig-run" aria-hidden="true" style="--to:20"></span></div>
@@ -2760,16 +2777,16 @@ strong { font-weight: var(--w-strong); }
       <p class="creed-k">Our vision</p>
       <p class="creed-v">A country in which everyone is able to live a healthy and fulfilling life.</p>
       <p class="creed-k creed-k--2">Our mission</p>
-      <p class="creed-m"><span class="rw">To</span> <span class="rw">save</span> <span class="rw">lives</span> <span class="rw">and</span> <span class="rw">improve</span> <span class="rw">health</span> <span class="rw">outcomes</span> <span class="rw">in</span> <span class="rw">India</span> <span class="rw">by</span> <span class="rw">enabling</span> <span class="rw">the</span> <span class="rw">government</span> <span class="rw">and</span> <span class="rw">private sector</span> <span class="rw">to</span> <span class="rw">strengthen</span> <span class="rw">and</span> <span class="rw">sustain</span> <span class="rw">quality</span> <span class="rw">health</span> <span class="rw">systems.</span></p>
+      <p class="creed-m">To save lives and improve health outcomes in India by enabling the government and private sector to strengthen and sustain quality health systems.</p>
     </div>
-    <div class="read"><p class="lede"><span class="rw">India’s</span> <span class="rw">health</span> <span class="rw">needs</span> <span class="rw">continue</span> <span class="rw">to</span> <span class="rw">evolve.</span> <span class="rw">Some</span> <span class="rw">challenges</span> <span class="rw">require</span> <span class="rw">new</span> <span class="rw">solutions;</span> <span class="rw">others</span> <span class="rw">require</span> <span class="rw">proven</span> <span class="rw">interventions</span> <span class="rw">to</span> <span class="rw">work</span> <span class="rw">better,</span> <span class="rw">reach</span> <span class="rw">further</span> <span class="rw">or</span> <span class="rw">become</span> <span class="rw">part</span> <span class="rw">of</span> <span class="rw">routine</span> <span class="rw">health</span> <span class="rw">systems.</span> <span class="rw">WJCF</span> <span class="rw">works</span> <span class="rw">with</span> <span class="rw">government</span> <span class="rw">and</span> <span class="rw">other</span> <span class="rw">partners</span> <span class="rw">across</span> <span class="rw">this</span> <span class="rw">continuum,</span> <span class="rw">from</span> <span class="rw">identifying</span> <span class="rw">emerging</span> <span class="rw">needs</span> <span class="rw">and</span> <span class="rw">testing</span> <span class="rw">new</span> <span class="rw">approaches</span> <span class="rw">to</span> <span class="rw">strengthening</span> <span class="rw">and</span> <span class="rw">improving</span> <span class="rw">established</span> <span class="rw">programmes.</span></p></div></div></div>
+    <div class="read"><p class="lede">India’s health needs continue to evolve. Some challenges require new solutions; others require proven interventions to work better, reach further or become part of routine health systems. WJCF works with government and other partners across this continuum, from identifying emerging needs and testing new approaches to strengthening and improving established programmes.</p></div></div></div>
 </section>
 
   
 <section class="band band--gold" id="how" data-lay data-nav="light" data-tab="About" data-chapter="How we work">
   <div class="inner inner--rail"><div class="lay"><h2 class="print">From identifying a gap to lasting change</h2>
-    <div class="read"><p class="lede"><span class="rw">We</span> <span class="rw">start</span> <span class="rw">with</span> <span class="rw">the</span> <span class="rw">problem,</span> <span class="rw">not</span> <span class="rw">a</span> <span class="rw">predetermined</span> <span class="rw">solution.</span> <span class="rw">Depending</span> <span class="rw">on</span> <span class="rw">the</span> <span class="rw">need,</span> <span class="rw">our</span> <span class="rw">role</span> <span class="rw">may</span> <span class="rw">involve</span> <span class="rw">generating</span> <span class="rw">evidence,</span> <span class="rw">introducing</span> <span class="rw">a</span> <span class="rw">technology,</span> <span class="rw">strengthening</span> <span class="rw">programme</span> <span class="rw">delivery,</span> <span class="rw">shaping</span> <span class="rw">markets,</span> <span class="rw">building</span> <span class="rw">capacity,</span> <span class="rw">improving</span> <span class="rw">data</span> <span class="rw">systems</span> <span class="rw">or</span> <span class="rw">bringing</span> <span class="rw">partners</span> <span class="rw">together</span> <span class="rw">around</span> <span class="rw">a</span> <span class="rw">shared</span> <span class="rw">public health</span> <span class="rw">priority.</span></p>
-<p class="lede"><span class="rw">Across</span> <span class="rw">our</span> <span class="rw">work,</span> <span class="rw">we</span> <span class="rw">follow</span> <span class="rw">three</span> <span class="rw">broad</span> <span class="rw">pathways:</span> <span class="rw">Initiate,</span> <span class="rw">Institutionalize</span> <span class="rw">and</span> <span class="rw">Improve.</span></p></div>
+    <div class="read"><p class="lede">We start with the problem, not a predetermined solution. Depending on the need, our role may involve generating evidence, introducing a technology, strengthening programme delivery, shaping markets, building capacity, improving data systems or bringing partners together around a shared public health priority.</p>
+<p class="lede">Across our work, we follow three broad pathways: Initiate, Institutionalize and Improve.</p></div>
     <div class="paths paths--3">
       <article class="path">
         <div class="path-n">01</div>
@@ -2777,7 +2794,7 @@ strong { font-weight: var(--w-strong); }
         <p class="path-b">We work with government and partners to understand health needs, identify barriers and opportunities, generate evidence, and design solutions that are practical, cost‑effective and suited to the context.</p>
         
 <figure class="ph ph--ink " style="--ph-ratio: 16 / 9">
-  <img class="ph-img" src="_assets/photos/community-session.jpg" width="750" height="422" alt=""
+  <img class="ph-img" src="_assets/photos/community-session.jpg?v=dcf2f74f" width="750" height="422" alt=""
        loading="lazy" decoding="async">
   <figcaption class="ph-cap">A community session in progress, with health workers and residents seated together.</figcaption>
 </figure>
@@ -2789,7 +2806,7 @@ strong { font-weight: var(--w-strong); }
         <p class="path-b">When an intervention demonstrates value, we work with government and other partners to standardise processes, strengthen capacity, align financing and implementation structures, and support adoption through existing health systems.</p>
         
 <figure class="ph ph--ink " style="--ph-ratio: 16 / 9">
-  <img class="ph-img" src="_assets/photos/oxygen-training.jpg" width="515" height="290" alt=""
+  <img class="ph-img" src="_assets/photos/oxygen-training.jpg?v=070400bd" width="515" height="290" alt=""
        loading="lazy" decoding="async">
   <figcaption class="ph-cap">Healthcare workers in Civil Hospital Sanchi, Raisen district, Madhya Pradesh, receive hands‑on training on the proper use and handling of oxygen equipment.</figcaption>
 </figure>
@@ -2801,7 +2818,7 @@ strong { font-weight: var(--w-strong); }
         <p class="path-b">We use monitoring, analytics, implementation research and emerging technologies to understand what is working, identify where course correction is needed, and continuously improve programme quality, efficiency and reach.</p>
         
 <figure class="ph ph--ink " style="--ph-ratio: 16 / 9">
-  <img class="ph-img" src="_assets/photos/lab-reporting.jpg" width="457" height="257" alt=""
+  <img class="ph-img" src="_assets/photos/lab-reporting.jpg?v=30d4662f" width="457" height="257" alt=""
        loading="lazy" decoding="async">
   <figcaption class="ph-cap">A private laboratory staff member reporting data onto a government portal for better disease surveillance, using the reporting tools developed.</figcaption>
 </figure>
@@ -2897,14 +2914,14 @@ strong { font-weight: var(--w-strong); }
   
 <section class="band band--cream2" id="work" data-lay data-nav="light" data-tab="Our Work" data-chapter="What we do">
   <div class="inner inner--rail"><div class="lay"><h2 class="print">Our areas of work</h2>
-    <p class="lede read"><span class="rw">WJCF</span> <span class="rw">works</span> <span class="rw">across</span> <span class="rw">established</span> <span class="rw">and</span> <span class="rw">emerging</span> <span class="rw">public health</span> <span class="rw">priorities,</span> <span class="rw">applying</span> <span class="rw">evidence,</span> <span class="rw">technology,</span> <span class="rw">implementation</span> <span class="rw">support</span> <span class="rw">and</span> <span class="rw">partnerships</span> <span class="rw">according</span> <span class="rw">to</span> <span class="rw">the</span> <span class="rw">needs</span> <span class="rw">of</span> <span class="rw">each</span> <span class="rw">programme.</span></p>
+    <p class="lede read">WJCF works across established and emerging public health priorities, applying evidence, technology, implementation support and partnerships according to the needs of each programme.</p>
     
 <ul class="acards">
   <li class="acard" data-span="3">
     <div class="acard-fig">
       
 <figure class="ph ph--ink " style="--ph-ratio: 21 / 9">
-  <img class="ph-img" src="_assets/photos/tb-specialist-consult.jpg" width="640" height="274" alt="A woman with TB receiving specialist consultation at the Medical College."
+  <img class="ph-img" src="_assets/photos/tb-specialist-consult.jpg?v=6538e3a4" width="640" height="274" alt="A woman with TB receiving specialist consultation at the Medical College."
        loading="lazy" decoding="async">
   
 </figure>
@@ -2930,7 +2947,7 @@ strong { font-weight: var(--w-strong); }
     <div class="acard-fig">
       
 <figure class="ph ph--ink " style="--ph-ratio: 21 / 9">
-  <img class="ph-img" src="_assets/photos/labour-room-aids.jpg" width="689" height="295" alt="A nurse showcasing job aides for labour rooms in West Bengal."
+  <img class="ph-img" src="_assets/photos/labour-room-aids.jpg?v=cea8d116" width="689" height="295" alt="A nurse showcasing job aides for labour rooms in West Bengal."
        loading="lazy" decoding="async">
   
 </figure>
@@ -2956,7 +2973,7 @@ strong { font-weight: var(--w-strong); }
     <div class="acard-fig">
       
 <figure class="ph ph--ink " style="--ph-ratio: 21 / 9">
-  <img class="ph-img" src="_assets/photos/frontline-workers.jpg" width="868" height="372" alt="Frontline health workers outside a Health and Wellness Centre."
+  <img class="ph-img" src="_assets/photos/frontline-workers.jpg?v=f18e99ce" width="868" height="372" alt="Frontline health workers outside a Health and Wellness Centre."
        loading="lazy" decoding="async">
   
 </figure>
@@ -2982,7 +2999,7 @@ strong { font-weight: var(--w-strong); }
     <div class="acard-fig">
       
 <figure class="ph ph--ink " style="--ph-ratio: 16 / 9">
-  <img class="ph-img" src="_assets/photos/abdm-facility.jpg" width="625" height="351" alt="An ABDM-onboarded private health facility showing how to create ABHAs."
+  <img class="ph-img" src="_assets/photos/abdm-facility.jpg?v=28182d28" width="625" height="351" alt="An ABDM-onboarded private health facility showing how to create ABHAs."
        loading="lazy" decoding="async">
   
 </figure>
@@ -3008,7 +3025,7 @@ strong { font-weight: var(--w-strong); }
     <div class="acard-fig">
       
 <figure class="ph ph--ink " style="--ph-ratio: 21 / 9">
-  <img class="ph-img" src="_assets/photos/cxca-training.jpg" width="567" height="243" alt="Training of gynaecologists on cervical cancer screening and pre-cancer treatment using portable thermal ablation devices."
+  <img class="ph-img" src="_assets/photos/cxca-training.jpg?v=6731d8f1" width="567" height="243" alt="Training of gynaecologists on cervical cancer screening and pre-cancer treatment using portable thermal ablation devices."
        loading="lazy" decoding="async">
   
 </figure>
@@ -3034,7 +3051,7 @@ strong { font-weight: var(--w-strong); }
     <div class="acard-fig">
       
 <figure class="ph ph--ink " style="--ph-ratio: 21 / 9">
-  <img class="ph-img" src="_assets/photos/field-path.jpg" width="858" height="368" alt="Women walking a field path."
+  <img class="ph-img" src="_assets/photos/field-path.jpg?v=ee4cf195" width="858" height="368" alt="Women walking a field path."
        loading="lazy" decoding="async">
   
 </figure>
@@ -3060,7 +3077,7 @@ strong { font-weight: var(--w-strong); }
     <div class="acard-fig">
       
 <figure class="ph ph--ink " style="--ph-ratio: 16 / 9">
-  <img class="ph-img" src="_assets/photos/lab-reporting.jpg" width="457" height="257" alt="A private laboratory staff member reporting data onto a government portal for better disease surveillance, using the reporting tools developed."
+  <img class="ph-img" src="_assets/photos/lab-reporting.jpg?v=30d4662f" width="457" height="257" alt="A private laboratory staff member reporting data onto a government portal for better disease surveillance, using the reporting tools developed."
        loading="lazy" decoding="async">
   
 </figure>
@@ -3086,7 +3103,7 @@ strong { font-weight: var(--w-strong); }
     <div class="acard-fig">
       
 <figure class="ph ph--ink " style="--ph-ratio: 16 / 9">
-  <img class="ph-img" src="_assets/photos/community-session.jpg" width="750" height="422" alt="A community session in progress, with health workers and residents seated together."
+  <img class="ph-img" src="_assets/photos/community-session.jpg?v=dcf2f74f" width="750" height="422" alt="A community session in progress, with health workers and residents seated together."
        loading="lazy" decoding="async">
   
 </figure>
@@ -3121,7 +3138,7 @@ strong { font-weight: var(--w-strong); }
     <div class="proof-in">
       <div class="proof-art">
 <figure class="ph ph--ink " style="--ph-ratio: 16 / 9">
-  <img class="ph-img" src="_assets/photos/tb-cad-xray.jpg" width="663" height="373" alt="A beneficiary being tested for TB using a CAD-enabled X-ray machine in Uttar Pradesh."
+  <img class="ph-img" src="_assets/photos/tb-cad-xray.jpg?v=3d5094fd" width="663" height="373" alt="A beneficiary being tested for TB using a CAD-enabled X-ray machine in Uttar Pradesh."
        loading="lazy" decoding="async">
   
 </figure></div>
@@ -3137,7 +3154,7 @@ strong { font-weight: var(--w-strong); }
     <div class="proof-in">
       <div class="proof-art">
 <figure class="ph ph--ink " style="--ph-ratio: 16 / 9">
-  <img class="ph-img" src="_assets/photos/oxygen-training.jpg" width="515" height="290" alt="Healthcare workers in Civil Hospital Sanchi, Raisen district, Madhya Pradesh, receive hands-on training on the proper use and handling of oxygen equipment."
+  <img class="ph-img" src="_assets/photos/oxygen-training.jpg?v=070400bd" width="515" height="290" alt="Healthcare workers in Civil Hospital Sanchi, Raisen district, Madhya Pradesh, receive hands-on training on the proper use and handling of oxygen equipment."
        loading="lazy" decoding="async">
   
 </figure></div>
@@ -3153,7 +3170,7 @@ strong { font-weight: var(--w-strong); }
     <div class="proof-in">
       <div class="proof-art">
 <figure class="ph ph--ink " style="--ph-ratio: 16 / 9">
-  <img class="ph-img" src="_assets/photos/immunization-tools.jpg" width="689" height="388" alt="Building the capacity of healthcare workers on digital tools for stronger immunization outcomes."
+  <img class="ph-img" src="_assets/photos/immunization-tools.jpg?v=6a392d8e" width="689" height="388" alt="Building the capacity of healthcare workers on digital tools for stronger immunization outcomes."
        loading="lazy" decoding="async">
   
 </figure></div>
@@ -3174,8 +3191,8 @@ strong { font-weight: var(--w-strong); }
     
 <ol class="shelf">
   <li class="shelf-i shelf-i--lead" data-kind="report">
-    <a class="shelf-a" href="_assets/docs/wjcf-annual-report-2024-25.pdf" download>
-      <span class="shelf-art"><img src="_assets/covers/wjcf-annual-report-2024-25-ink-navy.png" width="580" height="820" loading="lazy" decoding="async" alt="Cover of the Annual Report 2024-25, printed in one ink."></span>
+    <a class="shelf-a" href="_assets/docs/wjcf-annual-report-2024-25.pdf?v=3d79eb70" download>
+      <span class="shelf-art"><img src="_assets/covers/wjcf-annual-report-2024-25-ink-navy.png?v=8482069f" width="580" height="820" loading="lazy" decoding="async" alt="Cover of the Annual Report 2024-25, printed in one ink."></span>
       <span class="shelf-foot">
         <b class="shelf-k">Annual report</b>
         <h3 class="shelf-t">Annual Report 2024‑25</h3>
@@ -3212,7 +3229,7 @@ strong { font-weight: var(--w-strong); }
   
 <section class="band band--navy" id="get-involved" data-lay data-nav="dark" data-tab="Get Involved" data-chapter="Our partners">
   <div class="inner inner--rail"><div class="lay"><h2 class="print">In partnership with government, across India</h2>
-    <p class="lede read"><span class="rw">Complex</span> <span class="rw">public health</span> <span class="rw">challenges</span> <span class="rw">cannot</span> <span class="rw">be</span> <span class="rw">solved</span> <span class="rw">by</span> <span class="rw">one</span> <span class="rw">organisation</span> <span class="rw">alone.</span> <span class="rw">WJCF</span> <span class="rw">works</span> <span class="rw">with</span> <span class="rw">government</span> <span class="rw">institutions,</span> <span class="rw">funders,</span> <span class="rw">research</span> <span class="rw">and</span> <span class="rw">academic</span> <span class="rw">institutions,</span> <span class="rw">multilateral</span> <span class="rw">organisations,</span> <span class="rw">private‑sector</span> <span class="rw">partners,</span> <span class="rw">civil</span> <span class="rw">society</span> <span class="rw">and</span> <span class="rw">other</span> <span class="rw">technical</span> <span class="rw">organisations</span> <span class="rw">to</span> <span class="rw">bring</span> <span class="rw">complementary</span> <span class="rw">expertise</span> <span class="rw">and</span> <span class="rw">resources</span> <span class="rw">to</span> <span class="rw">shared</span> <span class="rw">health</span> <span class="rw">priorities.</span></p>
+    <p class="lede read">Complex public health challenges cannot be solved by one organisation alone. WJCF works with government institutions, funders, research and academic institutions, multilateral organisations, private‑sector partners, civil society and other technical organisations to bring complementary expertise and resources to shared health priorities.</p>
     <div class="roll"><p><span>Ministry of Health and Family Welfare</span><i aria-hidden="true">&middot;</i> <span>Central TB Division</span><i aria-hidden="true">&middot;</i> <span>National Health Authority</span><i aria-hidden="true">&middot;</i> <span>National Health Mission</span><i aria-hidden="true">&middot;</i> <span>NITI Aayog</span><i aria-hidden="true">&middot;</i> <span>World Health Organization</span><i aria-hidden="true">&middot;</i> <span>The Global Fund</span><i aria-hidden="true">&middot;</i> <span>Unitaid</span><i aria-hidden="true">&middot;</i> <span>Stop TB Partnership</span><i aria-hidden="true">&middot;</i> <span>UNFPA</span><i aria-hidden="true">&middot;</i> <span>World Bank</span><i aria-hidden="true">&middot;</i> <span>Asia Pacific Leaders Malaria Alliance</span><i aria-hidden="true">&middot;</i> <span>Gates Foundation</span><i aria-hidden="true">&middot;</i> <span>GiveWell</span><i aria-hidden="true">&middot;</i> <span>USAID</span><i aria-hidden="true">&middot;</i> <span>Clinton Health Access Initiative</span></p>
     </div></div></div>
 </section>
@@ -3220,10 +3237,10 @@ strong { font-weight: var(--w-strong); }
   
 <section class="band band--cream" id="team" data-lay data-nav="light" data-tab="Get Involved" data-chapter="Our team">
   <div class="inner inner--rail"><div class="lay"><h2 class="print">The people behind the work</h2>
-    <p class="lede read"><span class="rw">WJCF’s</span> <span class="rw">work</span> <span class="rw">is</span> <span class="rw">led</span> <span class="rw">by</span> <span class="rw">a</span> <span class="rw">multidisciplinary</span> <span class="rw">team</span> <span class="rw">spanning</span> <span class="rw">public health,</span> <span class="rw">programme</span> <span class="rw">implementation,</span> <span class="rw">research</span> <span class="rw">and</span> <span class="rw">analytics,</span> <span class="rw">technology,</span> <span class="rw">policy,</span> <span class="rw">operations</span> <span class="rw">and</span> <span class="rw">health</span> <span class="rw">systems.</span> <span class="rw">Our</span> <span class="rw">teams</span> <span class="rw">work</span> <span class="rw">across</span> <span class="rw">disciplines</span> <span class="rw">and</span> <span class="rw">geographies,</span> <span class="rw">combining</span> <span class="rw">technical</span> <span class="rw">expertise</span> <span class="rw">with</span> <span class="rw">implementation</span> <span class="rw">experience</span> <span class="rw">and</span> <span class="rw">close</span> <span class="rw">engagement</span> <span class="rw">with</span> <span class="rw">government</span> <span class="rw">and</span> <span class="rw">other</span> <span class="rw">partners.</span></p>
+    <p class="lede read">WJCF’s work is led by a multidisciplinary team spanning public health, programme implementation, research and analytics, technology, policy, operations and health systems. Our teams work across disciplines and geographies, combining technical expertise with implementation experience and close engagement with government and other partners.</p>
     <ul class="tm">
       <li><button class="tm-b" type="button" aria-expanded="false">
-        <span class="tm-fig"><span class="tm-ph"><img src="_assets/team/harkesh-dabas.jpg" alt="Mr. Harkesh Dabas" loading="lazy" width="400" height="400"></span><span class="tm-bio"><p>Mr. Dabas brings decades of experience in public health systems strengthening, with a trajectory from grassroots implementation to national policy leadership, reinforcing geographic and experiential diversity.</p></span></span>
+        <span class="tm-fig"><span class="tm-ph"><img src="_assets/team/harkesh-dabas.jpg?v=72a2e797" alt="Mr. Harkesh Dabas" loading="lazy" width="400" height="400"></span><span class="tm-bio"><p>Mr. Dabas brings decades of experience in public health systems strengthening, with a trajectory from grassroots implementation to national policy leadership, reinforcing geographic and experiential diversity.</p></span></span>
         <span class="tm-n">Mr. Harkesh Dabas</span>
         <span class="tm-r">Managing Director</span>
       </button></li>
@@ -3233,22 +3250,22 @@ strong { font-weight: var(--w-strong); }
         <span class="tm-r">Director, Immunization</span>
       </button></li>
       <li><button class="tm-b" type="button" aria-expanded="false">
-        <span class="tm-fig"><span class="tm-ph"><img src="_assets/team/vishnu-vasudev.jpg" alt="Mr. Vishnu Vasudev" loading="lazy" width="400" height="400"></span><span class="tm-bio"><p>With over two decades of hands‑on experience, Vishnu ensures execution excellence, particularly in large‑scale government collaborations, ensuring the integration of data systems, digital platforms, and innovation frameworks into our core programmes.</p></span></span>
+        <span class="tm-fig"><span class="tm-ph"><img src="_assets/team/vishnu-vasudev.jpg?v=35ac82d9" alt="Mr. Vishnu Vasudev" loading="lazy" width="400" height="400"></span><span class="tm-bio"><p>With over two decades of hands‑on experience, Vishnu ensures execution excellence, particularly in large‑scale government collaborations, ensuring the integration of data systems, digital platforms, and innovation frameworks into our core programmes.</p></span></span>
         <span class="tm-n">Mr. Vishnu Vasudev</span>
         <span class="tm-r">Deputy Director, Health Financing and Digital Health</span>
       </button></li>
       <li><button class="tm-b" type="button" aria-expanded="false">
-        <span class="tm-fig"><span class="tm-ph"><img src="_assets/team/mansharan-seth.jpg" alt="Ms. Mansharan Seth" loading="lazy" width="400" height="400"></span><span class="tm-bio"><p>A senior woman leader and expert in Sexual and Reproductive Health (SRH) and Maternal Health, Ms. Seth anchors the team in gender equity and rights‑based, community‑informed programme design.</p></span></span>
+        <span class="tm-fig"><span class="tm-ph"><img src="_assets/team/mansharan-seth.jpg?v=e12cffeb" alt="Ms. Mansharan Seth" loading="lazy" width="400" height="400"></span><span class="tm-bio"><p>A senior woman leader and expert in Sexual and Reproductive Health (SRH) and Maternal Health, Ms. Seth anchors the team in gender equity and rights‑based, community‑informed programme design.</p></span></span>
         <span class="tm-n">Ms. Mansharan Seth</span>
         <span class="tm-r">Director, Sexual and Reproductive Health, Essential Medicines and Oxygen, Nutrition</span>
       </button></li>
       <li><button class="tm-b" type="button" aria-expanded="false">
-        <span class="tm-fig"><span class="tm-ph"><img src="_assets/team/shamim-manan.jpg" alt="Dr. Shamim Manan" loading="lazy" width="400" height="400"></span><span class="tm-bio"><p>He leads WJCF’s portfolio on tuberculosis (TB), including one of the largest private sector engagement initiatives in the country, The Joint Effort for Elimination of Tuberculosis (JEET), supported by the Global Fund to Fight AIDS, Tuberculosis and Malaria (GFATM). He also oversees the scale‑up of programmatic management of latent tuberculosis infection (LTBI), which includes the expanded use of chest X‑ray, IGRA testing, and the introduction of the 3HP regimen. Prior to joining WJCF, Dr. Manan was part of the WHO’s consultant network in India for over a decade, supporting both provincial and national TB efforts. He has also played a key role in the annual reporting of surveillance data to WHO and has facilitated program reporting across various donor‑funded TB projects.</p></span></span>
+        <span class="tm-fig"><span class="tm-ph"><img src="_assets/team/shamim-manan.jpg?v=123a237b" alt="Dr. Shamim Manan" loading="lazy" width="400" height="400"></span><span class="tm-bio"><p>He leads WJCF’s portfolio on tuberculosis (TB), including one of the largest private sector engagement initiatives in the country, The Joint Effort for Elimination of Tuberculosis (JEET), supported by the Global Fund to Fight AIDS, Tuberculosis and Malaria (GFATM). He also oversees the scale‑up of programmatic management of latent tuberculosis infection (LTBI), which includes the expanded use of chest X‑ray, IGRA testing, and the introduction of the 3HP regimen. Prior to joining WJCF, Dr. Manan was part of the WHO’s consultant network in India for over a decade, supporting both provincial and national TB efforts. He has also played a key role in the annual reporting of surveillance data to WHO and has facilitated program reporting across various donor‑funded TB projects.</p></span></span>
         <span class="tm-n">Dr. Shamim Manan</span>
         <span class="tm-r">Deputy Director, Infectious Diseases</span>
       </button></li>
       <li><button class="tm-b" type="button" aria-expanded="false">
-        <span class="tm-fig"><span class="tm-ph"><img src="_assets/team/jyoti-puri.jpg" alt="Ms. Jyoti Puri" loading="lazy" width="400" height="400"></span><span class="tm-bio"><p>Jyoti is a senior Human Resources professional in the social sector ecosystem. She leads the people and HR function at WJCF. Previously, she has led people and culture verticals at Evidence Action, Ipas and WHO, among others.</p></span></span>
+        <span class="tm-fig"><span class="tm-ph"><img src="_assets/team/jyoti-puri.jpg?v=b1b44cdf" alt="Ms. Jyoti Puri" loading="lazy" width="400" height="400"></span><span class="tm-bio"><p>Jyoti is a senior Human Resources professional in the social sector ecosystem. She leads the people and HR function at WJCF. Previously, she has led people and culture verticals at Evidence Action, Ipas and WHO, among others.</p></span></span>
         <span class="tm-n">Ms. Jyoti Puri</span>
         <span class="tm-r">Director, Human Resources</span>
       </button></li>
@@ -3258,12 +3275,12 @@ strong { font-weight: var(--w-strong); }
         <span class="tm-r">Director, Finance and Administration</span>
       </button></li>
       <li><button class="tm-b" type="button" aria-expanded="false">
-        <span class="tm-fig"><span class="tm-ph"><img src="_assets/team/ranveer-singh.jpg" alt="Mr. Ranveer Singh" loading="lazy" width="400" height="400"></span><span class="tm-bio"><p>Ranveer leads the non‑communicable diseases portfolio, ensuring the integration of data systems, digital platforms, and innovation frameworks into our core programmes. His expertise bridges public health goals with modern tech‑based delivery models.</p></span></span>
+        <span class="tm-fig"><span class="tm-ph"><img src="_assets/team/ranveer-singh.jpg?v=3c823c48" alt="Mr. Ranveer Singh" loading="lazy" width="400" height="400"></span><span class="tm-bio"><p>Ranveer leads the non‑communicable diseases portfolio, ensuring the integration of data systems, digital platforms, and innovation frameworks into our core programmes. His expertise bridges public health goals with modern tech‑based delivery models.</p></span></span>
         <span class="tm-n">Mr. Ranveer Singh</span>
         <span class="tm-r">Deputy Director, Non‑Communicable Diseases</span>
       </button></li>
       <li><button class="tm-b" type="button" aria-expanded="false">
-        <span class="tm-fig"><span class="tm-ph"><img src="_assets/team/arvinder-walia.jpg" alt="Ms. Arvinder Walia" loading="lazy" width="400" height="400"></span><span class="tm-bio"><p>Arvinder heads Strategy and New Initiatives, offering a multisectoral approach grounded in private sector innovation and public health scale thinking. Her background includes technical public health experience in HIV and Neglected Tropical Diseases, and strategic planning and operations at private hospital groups and startups.</p></span></span>
+        <span class="tm-fig"><span class="tm-ph"><img src="_assets/team/arvinder-walia.jpg?v=d6a8254d" alt="Ms. Arvinder Walia" loading="lazy" width="400" height="400"></span><span class="tm-bio"><p>Arvinder heads Strategy and New Initiatives, offering a multisectoral approach grounded in private sector innovation and public health scale thinking. Her background includes technical public health experience in HIV and Neglected Tropical Diseases, and strategic planning and operations at private hospital groups and startups.</p></span></span>
         <span class="tm-n">Ms. Arvinder Walia</span>
         <span class="tm-r">Associate Director, Strategic Partnerships and New Initiatives</span>
       </button></li>
@@ -3285,7 +3302,7 @@ strong { font-weight: var(--w-strong); }
   
 <section class="band band--navy" id="contact" data-lay data-nav="dark" data-tab="Get Involved" data-chapter="Get in touch">
   <div class="inner inner--rail"><div class="lay"><h2 class="print">Get in touch</h2>
-    <p class="lede read"><span class="rw">Reach</span> <span class="rw">out</span> <span class="rw">to</span> <span class="rw">us</span> <span class="rw">to</span> <span class="rw">find</span> <span class="rw">out</span> <span class="rw">more</span> <span class="rw">about</span> <span class="rw">a</span> <span class="rw">programme</span> <span class="rw">and</span> <span class="rw">the</span> <span class="rw">evidence</span> <span class="rw">behind</span> <span class="rw">it,</span> <span class="rw">how</span> <span class="rw">an</span> <span class="rw">approach</span> <span class="rw">was</span> <span class="rw">built</span> <span class="rw">with</span> <span class="rw">government</span> <span class="rw">and</span> <span class="rw">taken</span> <span class="rw">to</span> <span class="rw">scale,</span> <span class="rw">or</span> <span class="rw">what</span> <span class="rw">it</span> <span class="rw">would</span> <span class="rw">take</span> <span class="rw">to</span> <span class="rw">do</span> <span class="rw">something</span> <span class="rw">similar</span> <span class="rw">somewhere</span> <span class="rw">else.</span> <span class="rw">You</span> <span class="rw">are</span> <span class="rw">equally</span> <span class="rw">welcome</span> <span class="rw">to</span> <span class="rw">write</span> <span class="rw">about</span> <span class="rw">funding</span> <span class="rw">a</span> <span class="rw">programme,</span> <span class="rw">working</span> <span class="rw">together</span> <span class="rw">on</span> <span class="rw">a</span> <span class="rw">health</span> <span class="rw">priority,</span> <span class="rw">or</span> <span class="rw">anything</span> <span class="rw">else</span> <span class="rw">on</span> <span class="rw">this</span> <span class="rw">site.</span> <span class="rw">One</span> <span class="rw">inbox</span> <span class="rw">reaches</span> <span class="rw">the</span> <span class="rw">whole</span> <span class="rw">organisation,</span> <span class="rw">and</span> <span class="rw">it</span> <span class="rw">is</span> <span class="rw">read</span> <span class="rw">by</span> <span class="rw">the</span> <span class="rw">people</span> <span class="rw">who</span> <span class="rw">can</span> <span class="rw">answer.</span></p>
+    <p class="lede read">Reach out to us to find out more about a programme and the evidence behind it, how an approach was built with government and taken to scale, or what it would take to do something similar somewhere else. You are equally welcome to write about funding a programme, working together on a health priority, or anything else on this site. One inbox reaches the whole organisation, and it is read by the people who can answer.</p>
     <ul class="gt">
       <li class="gt-i">
         <span class="gt-k">Partnerships and funding</span>
@@ -3792,6 +3809,35 @@ function onReveal(selector, fn, opts) {
     layer.style.transition = '';
   }
 
+  /* WHAT IS ACTUALLY ON SCREEN. visualViewport reports the rectangle the
+     reader can see, which on a phone drifts away from the layout viewport
+     every time the chrome retracts or a pinch-zoom moves. Everything else
+     here is pinned to the sheet's own box, so getting this right is the only
+     place the difference has to be handled. */
+  var vv = window.visualViewport;
+  function fitMenu() {
+    var w = vv ? vv.width : innerWidth;
+    var h = vv ? vv.height : innerHeight;
+    menu.style.right = 'auto';
+    menu.style.bottom = 'auto';
+    menu.style.left = (vv ? vv.offsetLeft : 0) + 'px';
+    menu.style.top = (vv ? vv.offsetTop : 0) + 'px';
+    menu.style.width = w + 'px';
+    menu.style.height = h + 'px';
+  }
+  function freeMenu() {
+    menu.style.right = menu.style.bottom = menu.style.left =
+      menu.style.top = menu.style.width = menu.style.height = '';
+  }
+  /* While it is open only. Listening always would run this on every scroll
+     of every page view for a sheet that is not displayed. */
+  function watchViewport(on) {
+    if (!vv) return;
+    var fn = on ? 'addEventListener' : 'removeEventListener';
+    vv[fn]('resize', fitMenu);
+    vv[fn]('scroll', fitMenu);
+  }
+
   function focusables() {
     return [].slice.call(menu.querySelectorAll('a[href], button:not([disabled])'))
       .filter(function (el) { return el.offsetParent !== null; });
@@ -3808,13 +3854,19 @@ function onReveal(selector, fn, opts) {
       /* The circle has to reach the furthest corner from wherever the control
          is, so the radius is the longest of the four diagonals, read on every
          open because the control moves with the viewport. */
+      /* Sized before it is measured: the reach below is to the corners of
+         the SHEET, not of the window, and on a phone those are two different
+         rectangles. */
+      fitMenu();
+      watchViewport(true);
       var b = btn.getBoundingClientRect();
       var x = b.left + b.width / 2, y = b.top + b.height / 2;
+      var m = menu.getBoundingClientRect();
       var far = Math.max(
-        Math.sqrt(x * x + y * y),
-        Math.sqrt((innerWidth - x) * (innerWidth - x) + y * y),
-        Math.sqrt(x * x + (innerHeight - y) * (innerHeight - y)),
-        Math.sqrt((innerWidth - x) * (innerWidth - x) + (innerHeight - y) * (innerHeight - y))
+        Math.hypot(x - m.left, y - m.top),
+        Math.hypot(x - m.right, y - m.top),
+        Math.hypot(x - m.left, y - m.bottom),
+        Math.hypot(x - m.right, y - m.bottom)
       );
       /* THE INK GOES THROUGH THE SAME DOOR AS THE OTHER TWO. It used to have
          its properties written straight on, which looked harmless because
@@ -3876,26 +3928,49 @@ function onReveal(selector, fn, opts) {
       var first = focusables()[0];
       if (first) setTimeout(function () { first.focus(); }, reach());
     } else {
-      root.setAttribute('data-menu', 'shut');
+      /* The drain is started LAST, below, so the sheet is still at full
+         cover while the page is put where it is going. */
       document.body.style.position = '';
       document.body.style.top = '';
       document.body.style.width = '';
       document.body.style.paddingRight = '';
-      /* THE PAGE IS SCROLLABLE AGAIN, AND BACK WHERE IT WAS. Anything that
-         wanted to move it had to wait for this: a click on a destination
-         fires the page's own eased jump on the same tick, and a jump that
-         runs while the page is locked moves nothing at all. Announced rather
-         than called, because the menu and the jump are separate pieces of
-         this script and neither should hold a reference to the other. */
-      menu.dispatchEvent(new CustomEvent('menushut', { bubbles: true }));
       var going = menu.querySelector('[data-going]');
       if (going) going.removeAttribute('data-going');
+      /* BACK WHERE IT WAS, AND ONLY THEN ANNOUNCED. This restore used to run
+         AFTER the announcement, and it went unnoticed for as long as the
+         listener only started an animation -- that animation's first frame
+         came later, so it read the restored position and all was well. The
+         moment the listener did something immediate instead, this line
+         overwrote it and the page sat where it started. The comment already
+         claimed the page was back where it was before anyone was told; now
+         the code agrees with it. */
       scrollTo(0, lockedScroll);
+      /* THE PAGE IS SCROLLABLE AGAIN, AND BACK WHERE IT WAS. Anything that
+         wanted to move it had to wait for this: a click on a destination
+         fires the page's own jump on the same tick, and a jump that runs
+         while the page is locked moves nothing at all. Announced rather than
+         called, because the menu and the jump are separate pieces of this
+         script and neither should hold a reference to the other. */
+      menu.dispatchEvent(new CustomEvent('menushut', { bubbles: true }));
+      /* AND NOW THE INK PULLS BACK, onto whatever the announcement just did.
+         Setting this first -- which is where it used to be -- started the
+         drain before the page had moved, so the last stretch of the journey
+         happened in a corner the ink had already left. This way the sheet is
+         at full cover for the move and the reveal lands on the destination,
+         which is the whole idea the menu is built on. */
+      root.setAttribute('data-menu', 'shut');
       [main, foot].forEach(function (el) { if (el) el.removeAttribute('aria-hidden'); });
       btn.focus();
       /* Held open until the ink has drained, or display:none cuts the exit
          off at its first frame. */
-      shutTimer = setTimeout(function () { menu.removeAttribute('data-live'); }, settle());
+      watchViewport(false);
+      shutTimer = setTimeout(function () {
+        menu.removeAttribute('data-live');
+        /* Only once it is out of the way: clearing the size while it is
+           still draining would snap it back to the layout viewport in full
+           view. */
+        freeMenu();
+      }, settle());
     }
   }
 
@@ -3978,8 +4053,8 @@ function onReveal(selector, fn, opts) {
    the bottom edge, complete by the time it is above the reading line. It
    grows while you move and holds where you leave it.
 
-   BOUND TO SCROLL POSITION, like the read-along and unlike everything else
-   here. The distinction is the same one: the lift, the cover and the cue are
+   BOUND TO SCROLL POSITION, unlike everything else here. The distinction is
+   the one this page's motion turns on: the lift, the cover and the cue are
    ARRIVING, and an arrival stopped halfway is just broken, so they run on a
    clock once triggered. A rule being drawn is not arriving, it is tracking,
    and half-drawn is the correct state for a line you are halfway to.
@@ -4215,8 +4290,8 @@ function onReveal(selector, fn, opts) {
       /* The band's own primary ink, not a light/dark approximation of it: on
          gold every other mark is the dark brown that field uses, and a navy
          marker there is legible but borrowed. The unread rows take that band's
-         resting ink, the same token the read-along rests at, so they are dim
-         by the field's own measured amount rather than by an opacity guess. */
+         resting ink, the field's own measured value, so they are dim by a
+         figure measured on that ground rather than by an opacity guess. */
       var cs = getComputedStyle(on[0]);
       mark.style.color = cs.color;
       mark.style.setProperty('--mark-rest', cs.getPropertyValue('--read-rest') || cs.color);
@@ -4267,18 +4342,32 @@ function onReveal(selector, fn, opts) {
     addEventListener(ev, stop, { passive: true });
   });
 
-  function moveTo(el) {
+  /* covered: a full-screen sheet is over the page right now, so the journey
+     is not going to be seen and there is nothing to pace. (No backticks in
+     here -- this whole script is itself a template literal, and one would
+     end it.) */
+  function moveTo(el, covered) {
     var margin = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
     var max = Math.max(0, document.documentElement.scrollHeight - innerHeight);
     var to = Math.max(0, Math.min(max, el.getBoundingClientRect().top + scrollY - margin));
     var from = scrollY;
     var dist = to - from;
-    if (REDUCED.matches || Math.abs(dist) < 2) { scrollTo(0, to); return; }
+    if (REDUCED.matches || covered || Math.abs(dist) < 2) { scrollTo(0, to); return; }
 
-    /* Rises with distance, then stops rising. A neighbouring section is a
-       flick; the full length of the page is still under three-quarters of a
-       second. */
-    var ms = Math.min(700, Math.max(320, Math.abs(dist) / 3.5));
+    /* RISES WITH DISTANCE, AND KEEPS RISING. It used to be capped flat at
+       700ms, which meant a jump of a thousand pixels and a jump of twenty
+       thousand took the same time -- so the longer the journey the faster it
+       had to travel, and the full-page case strobed through six bands in
+       four hundred milliseconds. Now the far end of the page gets the time
+       it needs:
+
+           800px  560ms    10,000px  1045ms
+         3,000px  607ms    20,000px  1670ms
+
+       The ceiling stays under two seconds on purpose. Past that a reader
+       stops reading the motion as travel and starts waiting for it to
+       finish, and a scroll being waited out is worse than a quick one. */
+    var ms = Math.min(1900, Math.max(560, 420 + Math.abs(dist) / 16));
     var t0 = null;
     var me = (run = {});
     function frame(now) {
@@ -4286,8 +4375,14 @@ function onReveal(selector, fn, opts) {
       if (t0 === null) t0 = now;
       var t = Math.min(1, (now - t0) / ms);
       /* Ease in and out: a transit should leave and arrive gently, unlike an
-         entrance, which only has to arrive. */
-      var e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+         entrance, which only has to arrive.
+
+         SINE RATHER THAN CUBIC, and the difference is the whole feel of it.
+         Both leave and arrive at rest, but a cubic in-out peaks at twice the
+         average speed in the middle while sine peaks at 1.57 times. Over a
+         long jump that midpoint is exactly where the smear was, so the
+         flatter curve is worth more here than anywhere else on the page. */
+      var e = 0.5 - Math.cos(Math.PI * t) / 2;
       scrollTo(0, Math.round(from + dist * e));
       if (t < 1) requestAnimationFrame(frame);
       else run = null;
@@ -4321,9 +4416,16 @@ function onReveal(selector, fn, opts) {
        shows is the destination arriving. */
     var fld = document.getElementById('fldMenu');
     if (fld && fld.hasAttribute('data-live')) {
+      /* THE SHEET CARRIES IT. menushut fires the instant the page is
+         scrollable again, which is also the instant the ink STARTS draining
+         -- it has half a second still to go and the screen is entirely navy.
+         So the page is put at its destination now, under cover, and the
+         drain reveals the section already in place. The reader never sees
+         the journey, which is the only way a twenty-thousand-pixel one can
+         be anything but a strobe. */
       fld.addEventListener('menushut', function once() {
         fld.removeEventListener('menushut', once);
-        moveTo(el);
+        moveTo(el, true);
       });
     } else {
       moveTo(el);
@@ -4337,92 +4439,6 @@ function onReveal(selector, fn, opts) {
 
 })();
 
-/* The read-along. Each block maps its own travel across the viewport onto how
-   many of its words have deepened -- so the ink is light until you reach the
-   paragraph and deepens as you read down it, and where it has got to is a
-   record of how far you have read.
-
-   This one is bound to scroll POSITION on purpose, which the rest of the
-   page's motion deliberately is not. The difference is that everything else
-   is ARRIVING, and an arrival stopped halfway is just broken; this is not
-   arriving, it is tracking. Half-inked is the correct state for a paragraph
-   you are halfway down.
-
-   The creed runs on it too. It used to have a scroll-timeline scrub of its
-   own that needed a 200vh sticky section to scrub against; this gives the
-   same effect with the section its natural height. Written as a class toggle rather than a
-   per-word style write, so the work per frame is one class-list change per
-   word that actually changed, and it is all inside one rAF. */
-(function () {
-  var blocks = [].slice.call(document.querySelectorAll('.read, .creed-m')).map(function (el) {
-    return { el: el, words: [].slice.call(el.querySelectorAll('.rw')), filled: -1 };
-  });
-  if (!blocks.length) return;
-
-  if (REDUCED.matches) {
-    blocks.forEach(function (b) {
-      b.words.forEach(function (w) { w.classList.add('on'); });
-    });
-    return;
-  }
-
-  /* How many words the ink is still spreading through at the head of the
-     fill. Enough to read as a wave, few enough that a frame never touches more
-     than a handful of class lists. Six rather than four: the gradient is the
-     part a reader actually notices, and four words of it on a long line was
-     close enough to a hard edge to be missed. */
-  var WET = 6;
-
-  /* Applies the three states across the range that can have changed, rather
-     than across the paragraph: at most WET words either side of the old and new
-     heads, so the work per frame stays flat however long the block is. */
-  function mark(b, n) {
-    var w = b.words;
-    var lo = Math.max(0, Math.min(b.filled, n) - WET - 1);
-    var hi = Math.min(w.length, Math.max(b.filled, n) + WET + 1);
-    for (var i = lo; i < hi; i++) {
-      var cl = w[i].classList;
-      if (i < n) { cl.remove('wet'); cl.add('on'); }
-      else if (i < n + WET) { cl.remove('on'); cl.add('wet'); }
-      else { cl.remove('on'); cl.remove('wet'); }
-    }
-    b.filled = n;
-  }
-
-  var queued = false;
-  function fill() {
-    queued = false;
-    for (var i = 0; i < blocks.length; i++) {
-      var b = blocks[i];
-      var r = b.el.getBoundingClientRect();
-      if (r.bottom < -200 || r.top > innerHeight + 200) {
-        /* Off screen above: it has been read, so leave it finished — and with
-           no wet edge left behind, which would otherwise strand four words
-           mid-ink at the top of a paragraph the reader has already passed. */
-        if (r.bottom < 0 && b.filled < b.words.length) mark(b, b.words.length);
-        continue;
-      }
-      /* The band: from three-quarters down the viewport to one-quarter. It
-         starts just below where the section itself lays down, so the ink
-         always arrives after the paper. */
-      var start = innerHeight * 0.78;
-      var end = innerHeight * 0.26;
-      var span = Math.max(1, r.height + (start - end));
-      var travelled = start - r.top;
-      var t = Math.max(0, Math.min(1, travelled / span));
-      var n = Math.round(t * b.words.length);
-      if (n === b.filled) continue;
-      mark(b, n);
-    }
-  }
-  addEventListener('scroll', function () {
-    if (queued) return;
-    queued = true;
-    requestAnimationFrame(fill);
-  }, { passive: true });
-  addEventListener('resize', fill, { passive: true });
-  fill();
-})();
 
 /* Every marquee band on the page -- the states band across the top is the only
    one since the voices strip was removed, and the engine is written for a set
