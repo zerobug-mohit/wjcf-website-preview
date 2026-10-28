@@ -2700,6 +2700,202 @@ h1.print { font-size: clamp(34px, 5.6vw, 82px); }
 }
 .on-i:hover .on-n, .on-i:focus-visible .on-n { color: var(--gold); }
 
+/* The sheet hangs from the header rather than from one tab, so the tab stops
+   being a containing block and the header becomes one. */
+.nav-item--menu { position: static; gap: 0; }
+.nav-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  transform: none;
+  padding-top: 0;
+}
+.nav-item--menu:hover .nav-menu,
+.nav-item--menu:focus-within .nav-menu,
+.nav-item--menu[data-open] .nav-menu { transform: none; }
+/* Once the script owns the state, hover alone stops opening anything: the two
+   would disagree the moment a pointer left a sheet that had been pinned open
+   by a click. The hover rules stay in the sheet for the no-script case. */
+.nav[data-menus='live'] .nav-item--menu:hover .nav-menu,
+.nav[data-menus='live'] .nav-item--menu:focus-within .nav-menu {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.nav[data-menus='live'] .nav-item--menu[data-open] .nav-menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.sheet { background: var(--navy); color: var(--white); border-top: 3px solid var(--gold); }
+.sheet-in {
+  max-width: var(--nav-max, 1560px);
+  margin-inline: auto;
+  padding: clamp(20px, 2.2vw, 30px) var(--pad) clamp(24px, 2.6vw, 36px);
+}
+.sheet-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0 clamp(18px, 2vw, 34px);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 620px) { .sheet-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1040px) { .sheet-list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1340px) { .sheet-list { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+/* RULED, NOT TILED. The first version separated the items with a one-pixel
+   gap over a pale background, which draws a grid -- and a grid draws its
+   empty cells too: eight portfolios in five columns left two lit rectangles
+   in the top right with nothing in them. A rule per item has no cells to
+   leave empty. */
+.sheet-i { border-top: 1px solid rgba(255, 255, 255, 0.18); }
+/* .sheet .sheet-a, not .sheet-a, and the extra class is the whole fix. The
+   bar's own rule is .nav-links a, which is one class and one type and so
+   out-weighs a single class however late it is declared. The first attempt
+   set text-transform here and lost silently: the sheet rendered, the rule
+   was in the file, and every name was still in capitals. */
+.sheet .sheet-a {
+  display: block;
+  height: 100%;
+  padding: 13px 14px 15px;
+  text-decoration: none;
+  color: inherit;
+  border-left: 3px solid transparent;
+  /* NOT THE TABS' SETTING. These anchors sit inside .nav-links, so they
+     inherit its uppercase and its 0.09em tracking. A tab is a word and can be
+     shouted; a portfolio name is a sentence and cannot -- set in tracked
+     capitals the longest of them ran to four lines and could not be scanned
+     at all. This is the second component in this bar to need the correction,
+     which is why it is stated loudly rather than quietly. */
+  text-transform: none;
+  letter-spacing: normal;
+  transition: background-color 0.16s var(--ease), border-color 0.16s var(--ease);
+}
+.sheet .sheet-n {
+  display: block;
+  font-size: 15.5px;
+  font-weight: var(--w-strong);
+  letter-spacing: -0.006em;
+  line-height: 1.24;
+}
+.sheet .sheet-s {
+  display: block;
+  margin-top: 5px;
+  font-size: 12.5px;
+  line-height: 1.38;
+  color: rgba(255, 255, 255, 0.66);
+}
+.sheet .sheet-a:hover, .sheet .sheet-a:focus-visible {
+  background: rgba(255, 255, 255, 0.07);
+  border-left-color: var(--gold);
+}
+.sheet .sheet-a[aria-current='page'] { border-left-color: var(--gold); background: rgba(244, 183, 27, 0.1); }
+.sheet .sheet-a[aria-current='page'] .sheet-n { color: var(--gold); }
+
+/* The control. A sibling of the tab rather than part of it, sized so a finger
+   lands on it without catching the link beside it. */
+.nav-more {
+  display: none;
+  margin-left: 7px;
+  padding: 9px 5px;
+  background: none;
+  border: 0;
+  color: inherit;
+  opacity: 0.68;
+  cursor: pointer;
+  line-height: 0;
+  transition: opacity 0.2s var(--ease), transform 0.22s var(--ease);
+}
+@media (min-width: 1040px) { .nav-more { display: inline-flex; } }
+.nav-more svg { width: 11px; height: 8px; }
+.nav-more:hover { opacity: 1; }
+.nav-more[aria-expanded='true'] { opacity: 1; transform: rotate(180deg); }
+@media (prefers-reduced-motion: reduce) { .nav-more { transition: opacity 0.2s var(--ease); } }
+
+/* The index of portfolios at the foot of a portfolio page. Cream, because it
+   follows a red band of results and the page should cool before the navy
+   footer rather than run three dark fields together. */
+.pix { background: var(--cream-2); color: var(--navy); padding: clamp(38px, 5vh, 62px) var(--pad); }
+.pix-in { max-width: var(--measure); margin-inline: auto; }
+.pix-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--navy);
+}
+.pix-k {
+  margin: 0;
+  font-size: 13px;
+  font-weight: var(--w-strong);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.pix-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12.5px;
+  font-weight: var(--w-strong);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 2px solid transparent;
+}
+.pix-all svg { width: 14px; height: 14px; }
+.pix-all:hover, .pix-all:focus-visible { border-bottom-color: currentColor; }
+.pix-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0 clamp(18px, 2vw, 34px);
+  grid-template-columns: 1fr;
+}
+/* Capped at four, like the header's sheet. auto-fit gave five at 1440, which
+   sets eight portfolios as five and three and leaves the second row looking
+   unfinished. Four and four closes. */
+@media (min-width: 560px) { .pix-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1000px) { .pix-list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1320px) { .pix-list { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.pix-i { border-bottom: 1px solid rgba(0, 62, 120, 0.2); }
+.pix-a {
+  display: block;
+  height: 100%;
+  padding: 15px 16px 16px 0;
+  text-decoration: none;
+  color: inherit;
+}
+@media (min-width: 760px) { .pix-a { padding-right: 28px; } }
+.pix-n {
+  display: block;
+  font-size: 16px;
+  font-weight: var(--w-strong);
+  letter-spacing: -0.008em;
+  line-height: 1.24;
+}
+.pix-s {
+  display: block;
+  margin-top: 5px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--on-field-2);
+}
+a.pix-a:hover .pix-n, a.pix-a:focus-visible .pix-n { color: var(--turq-deep); }
+/* The one you are on. Marked by a gold rule it carries and the others do not,
+   and not a link, because a destination that is the page you are standing on
+   is not a destination. */
+.pix-i--here { border-bottom-color: var(--gold); }
+.pix-i--here .pix-a { padding-left: 13px; border-left: 3px solid var(--gold); }
+.pix-i--here .pix-n { color: var(--navy); }
+.pix-i--here .pix-s { color: var(--on-field-2); }
+
 /* The control is wider than the drawer's was, because "Explore portfolio"
    is two words where "Portfolio overview +" was one and a sign. Held to the
    card's own measure so a two-word label never pushes the card's foot wider
@@ -2750,7 +2946,20 @@ h1.print { font-size: clamp(34px, 5.6vw, 82px); }
     <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"><i class="on-dark"></i><i class="on-light"></i><i class="on-flood"></i></span><span class="brand-name"><span>William J. Clinton</span> <span>Foundation</span></span></a>
     <nav class="nav-links" aria-label="Primary">
       <a href="index.html#about" data-tab="About">About</a>
-      <a href="index.html#work" data-tab="Our Work" aria-current="page">Our Work</a>
+      <div class="nav-item nav-item--menu"><a href="index.html#work" data-tab="Our Work" aria-current="page">Our Work</a><button class="nav-more" type="button" aria-expanded="false" aria-controls="sheet-our-work" aria-label="Our Work: show what is in this part"><svg viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5 6 6.5l5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg></button><div class="nav-menu" id="sheet-our-work"><div class="sheet">
+    <div class="sheet-in">
+      <ul class="sheet-list">
+        <li class="sheet-i"><a class="sheet-a" href="work-infectious-diseases.html"><span class="sheet-n">Infectious Diseases</span><span class="sheet-s">Tuberculosis, Integrated Lung Health, Malaria, Dengue, Lymphatic Filariasis and Visceral Leishmaniasis, HIV, STIs, Hepatitis, Antimicrobial Resistance</span></a></li>
+        <li class="sheet-i"><a class="sheet-a" href="work-rmncah-nutrition.html"><span class="sheet-n">Reproductive, Maternal, Newborn, Child &amp; Adolescent Health + Nutrition</span><span class="sheet-s">Sexual &amp; Reproductive Health, Maternal &amp; Newborn Health</span></a></li>
+        <li class="sheet-i"><a class="sheet-a" href="work-vaccine-preventable-diseases.html"><span class="sheet-n">Vaccine Preventable Diseases</span><span class="sheet-s">Immunization, VPD Surveillance</span></a></li>
+        <li class="sheet-i"><a class="sheet-a" href="work-health-systems.html"><span class="sheet-n">Health Systems Strengthening</span><span class="sheet-s">ABDM, Health Financing, Care Coordination, Medical Oxygen</span></a></li>
+        <li class="sheet-i"><a class="sheet-a" href="work-non-communicable-diseases.html" aria-current="page"><span class="sheet-n">Non‑Communicable Diseases</span><span class="sheet-s">Cervical Cancer, Type 1 Diabetes, Sickle Cell Disease</span></a></li>
+        <li class="sheet-i"><a class="sheet-a" href="work-climate-and-health.html"><span class="sheet-n">Environmental and Climate Health</span><span class="sheet-s">Climate and Cooling, Lead Exposure</span></a></li>
+        <li class="sheet-i"><a class="sheet-a" href="work-diagnostics-and-surveillance.html"><span class="sheet-n">Diagnostics and Surveillance</span><span class="sheet-s">AI in health</span></a></li>
+        <li class="sheet-i"><a class="sheet-a" href="work-assistive-technology.html"><span class="sheet-n">Assistive Technology</span><span class="sheet-s">Glasses for Presbyopia</span></a></li>
+      </ul>
+    </div>
+  </div></div></div>
       <a href="index.html#impact" data-tab="Impact">Impact</a>
       <a href="index.html#publications" data-tab="Resources">Resources</a>
       <a href="index.html#get-involved" data-tab="Get Involved">Get Involved</a>
@@ -2766,7 +2975,7 @@ h1.print { font-size: clamp(34px, 5.6vw, 82px); }
     <div class="fl-in">
       <ul class="fl-list">
         <li class="fl-item"><a class="fl-link" href="index.html#about">About</a><p class="fl-sub">Our story, Why we exist, How we work, Our journey, Values</p></li>
-        <li class="fl-item"><a class="fl-link" href="index.html#work">Our Work</a><p class="fl-sub">What we do</p></li>
+        <li class="fl-item"><a class="fl-link" href="index.html#work">Our Work</a><p class="fl-sub"><a href="work-infectious-diseases.html">Infectious Diseases</a><i aria-hidden="true">·</i><a href="work-rmncah-nutrition.html">Reproductive, Maternal, Newborn, Child &amp; Adolescent Health + Nutrition</a><i aria-hidden="true">·</i><a href="work-vaccine-preventable-diseases.html">Vaccine Preventable Diseases</a><i aria-hidden="true">·</i><a href="work-health-systems.html">Health Systems Strengthening</a><i aria-hidden="true">·</i><a href="work-non-communicable-diseases.html" aria-current="page">Non‑Communicable Diseases</a><i aria-hidden="true">·</i><a href="work-climate-and-health.html">Environmental and Climate Health</a><i aria-hidden="true">·</i><a href="work-diagnostics-and-surveillance.html">Diagnostics and Surveillance</a><i aria-hidden="true">·</i><a href="work-assistive-technology.html">Assistive Technology</a></p></li>
         <li class="fl-item"><a class="fl-link" href="index.html#impact">Impact</a><p class="fl-sub">Featured work</p></li>
         <li class="fl-item"><a class="fl-link" href="index.html#publications">Resources</a><p class="fl-sub">Regulatory information and reports</p></li>
         <li class="fl-item"><a class="fl-link" href="index.html#get-involved">Get Involved</a><p class="fl-sub">Our partners, Our team, Careers, Get in touch</p></li>
@@ -2820,16 +3029,22 @@ h1.print { font-size: clamp(34px, 5.6vw, 82px); }
     <ul class="ov-facts"><li class="ov-fact"><b>TYPE 1 DIABETES</b><span class="ov-fig">97 clinics | 3,101 enrolled</span><p>T1D services were integrated into government NCD clinics across four states. By March 2026, 97 clinics were operational and 3,101 people were enrolled in structured care.</p></li><li class="ov-fact"><b>CERVICAL CANCER</b><span class="ov-fig">50,608 women screened</span><p>Screening was operationalised across 689 public facilities in Rajasthan. All 349 women who screened positive were linked to confirmation and/or treatment pathways.</p></li><li class="ov-fact"><b>SICKLE CELL DISEASE</b><span class="ov-fig">~2.4 million people screened</span><p>Across 20 tribal focal districts in Madhya Pradesh, around 2.4 million people were screened and about 22,000 people with SCD were enrolled in ongoing care.</p></li><li class="ov-fact"><b>SICKLE CELL DIAGNOSTICS</b><span class="ov-fig">6 CHCs enabled same‑day confirmation</span><p>Point‑of‑care Hb‑electrophoresis at six CHCs brought confirmatory testing and newborn screening closer to communities at the sub‑district level.</p></li></ul></div></div>
 </section>
 
-<nav class="on" aria-label="More of this site">
-  <div class="on-in">
-    <a class="on-i on-i--prev" href="work-health-systems.html">
-        <span class="on-k">Previous</span>
-        <span class="on-n">Health Systems Strengthening</span>
-      </a>
-    <a class="on-i on-i--next" href="work-climate-and-health.html">
-        <span class="on-k">Next</span>
-        <span class="on-n">Environmental and Climate Health</span>
-      </a>
+<nav class="pix" aria-label="All portfolios">
+  <div class="pix-in">
+    <div class="pix-head">
+      <h2 class="pix-k">The eight portfolios</h2>
+      <a class="pix-all" href="index.html#work">Our areas of work<svg viewBox="0 0 15 15" fill="none" aria-hidden="true"><path d="M1 7.5h12M9 3l4.5 4.5L9 12" stroke="currentColor" stroke-width="2"/></svg></a>
+    </div>
+    <ul class="pix-list">
+      <li class="pix-i"><a class="pix-a" href="work-infectious-diseases.html"><span class="pix-n">Infectious Diseases</span><span class="pix-s">Tuberculosis, Integrated Lung Health, Malaria, Dengue, Lymphatic Filariasis and Visceral Leishmaniasis, HIV, STIs, Hepatitis, Antimicrobial Resistance</span></a></li>
+      <li class="pix-i"><a class="pix-a" href="work-rmncah-nutrition.html"><span class="pix-n">Reproductive, Maternal, Newborn, Child &amp; Adolescent Health + Nutrition</span><span class="pix-s">Sexual &amp; Reproductive Health, Maternal &amp; Newborn Health</span></a></li>
+      <li class="pix-i"><a class="pix-a" href="work-vaccine-preventable-diseases.html"><span class="pix-n">Vaccine Preventable Diseases</span><span class="pix-s">Immunization, VPD Surveillance</span></a></li>
+      <li class="pix-i"><a class="pix-a" href="work-health-systems.html"><span class="pix-n">Health Systems Strengthening</span><span class="pix-s">ABDM, Health Financing, Care Coordination, Medical Oxygen</span></a></li>
+      <li class="pix-i pix-i--here" aria-current="page"><span class="pix-a"><span class="pix-n">Non‑Communicable Diseases</span><span class="pix-s">Cervical Cancer, Type 1 Diabetes, Sickle Cell Disease</span></span></li>
+      <li class="pix-i"><a class="pix-a" href="work-climate-and-health.html"><span class="pix-n">Environmental and Climate Health</span><span class="pix-s">Climate and Cooling, Lead Exposure</span></a></li>
+      <li class="pix-i"><a class="pix-a" href="work-diagnostics-and-surveillance.html"><span class="pix-n">Diagnostics and Surveillance</span><span class="pix-s">AI in health</span></a></li>
+      <li class="pix-i"><a class="pix-a" href="work-assistive-technology.html"><span class="pix-n">Assistive Technology</span><span class="pix-s">Glasses for Presbyopia</span></a></li>
+    </ul>
   </div>
 </nav>
 </main>
@@ -4094,6 +4309,86 @@ function onReveal(selector, fn, opts) {
   }, { passive: true });
 })();
 
+
+/* The header's menus: one open at a time, closable, reachable by any input. */
+(function () {
+  var nav = document.querySelector('.nav');
+  if (!nav) return;
+  var items = [].slice.call(nav.querySelectorAll('.nav-item--menu'));
+  if (!items.length) return;
+  nav.setAttribute('data-menus', 'live');
+
+  var open = null;
+  /* WHETHER THE OPEN SHEET WAS ASKED FOR OR JUST HOVERED OVER, and the first
+     version of this did not know the difference, which broke it completely.
+     A pointer entering the item opened the sheet; the click that followed
+     found it already open and toggled it shut again, so on a desktop the
+     control appeared to do nothing and on a touch screen -- where the browser
+     still synthesises a mouse-enter before the tap -- it did nothing either.
+     A hover opens; a click or a tap pins; only a pinned sheet closes on a
+     second press. */
+  var pinned = false;
+  function show(item) {
+    if (open === item) return;
+    hide();
+    open = item;
+    item.setAttribute('data-open', '');
+    var b = item.querySelector('.nav-more');
+    if (b) b.setAttribute('aria-expanded', 'true');
+  }
+  function hide() {
+    if (!open) return;
+    open.removeAttribute('data-open');
+    var b = open.querySelector('.nav-more');
+    if (b) b.setAttribute('aria-expanded', 'false');
+    open = null;
+    pinned = false;
+  }
+
+  var hoverable = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  items.forEach(function (item) {
+    var btn = item.querySelector('.nav-more');
+    if (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (open === item && pinned) hide();
+        else {
+          show(item);
+          pinned = true;
+        }
+      });
+    }
+    /* A pointer that can genuinely hover still opens by hovering, because on
+       a desktop that is what this bar has always done. A finger never
+       matches this query, so a finger gets the control instead. */
+    if (hoverable) {
+      item.addEventListener('mouseenter', function () { if (!pinned) show(item); });
+      item.addEventListener('mouseleave', function () {
+        if (!pinned && open === item) hide();
+      });
+    }
+    /* Tabbing into a sheet opens it; tabbing out of the item closes it, so
+       the keyboard never leaves a sheet open behind the reader. */
+    item.addEventListener('focusin', function () { if (!pinned) show(item); });
+    item.addEventListener('focusout', function (e) {
+      if (!item.contains(e.relatedTarget) && open === item) hide();
+    });
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape' || !open) return;
+    var btn = open.querySelector('.nav-more');
+    hide();
+    if (btn) btn.focus();
+  });
+  document.addEventListener('pointerdown', function (e) {
+    if (open && !open.contains(e.target)) hide();
+  });
+  /* A sheet that survived a page's worth of scrolling is one the reader has
+     forgotten about, and it is covering the band they scrolled to. */
+  window.addEventListener('scroll', function () { hide(); }, { passive: true });
+})();
 </script>
 </body>
 </html>
