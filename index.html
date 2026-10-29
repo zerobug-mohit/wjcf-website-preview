@@ -55,7 +55,16 @@
   --edge: max(var(--pad), (100% - var(--measure)) / 2);
   --rhythm: clamp(58px, 8vh, 104px);
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --nav-h: 66px;
+  /* Two tokens for one bar. --nav-bar is the row, which .nav-in is set to;
+     --nav-h is what the fixed bar occupies in total, the row plus the
+     hairline, and it is what every hero pads itself by.
+     THEY WERE ONE TOKEN AND THAT WAS A BUG THAT GREW. The script measures
+     the bar and writes --nav-h, and --nav-h set the row's height, so the
+     measurement fed its own input and wrote back one more pixel than it
+     read every pass. On a phone the URL bar collapsing is a resize, so the
+     header gained a pixel per scroll gesture, without limit. */
+  --nav-bar: 66px;
+  --nav-h: calc(var(--nav-bar) + 1px);
   /* The bar's cap holds its own gutters INSIDE it -- .nav-in carries the
      padding -- so to put the masthead on the same vertical as the headline
      the cap has to be the measure PLUS the two gutters. Capped at the measure
@@ -256,7 +265,8 @@ strong { font-weight: var(--w-strong); }
   display: flex;
   align-items: center;
   gap: clamp(12px, 2vw, 30px);
-  height: var(--nav-h);
+  /* --nav-bar, NOT --nav-h: see the note beside the tokens. */
+  height: var(--nav-bar);
   padding-inline: var(--pad);
   max-width: var(--nav-max, 1560px);
   margin-inline: auto;

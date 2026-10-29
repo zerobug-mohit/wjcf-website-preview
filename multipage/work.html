@@ -55,7 +55,30 @@
   --edge: max(var(--pad), (100% - var(--measure)) / 2);
   --rhythm: clamp(58px, 8vh, 104px);
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --nav-h: 66px;
+  /* TWO TOKENS FOR ONE BAR, AND THE SECOND ONE IS NOT A CONVENIENCE.
+
+     --nav-bar is the height of the row, which .nav-in is set to.
+     --nav-h is how much vertical space the fixed bar occupies in total: the
+     row plus the hairline along its bottom edge. Every hero pads itself by
+     calc(var(--nav-h) + ...), the overlay insets by it, and [id] takes its
+     scroll-margin from it, so it has to be the whole thing or the page sits
+     a pixel under the rule.
+
+     THEY WERE ONE TOKEN AND THAT WAS A BUG THAT GREW. nav.js measures the
+     bar and writes --nav-h, and --nav-h set the row's height, so the
+     measurement fed its own input: each pass read the row plus the border and
+     wrote the sum back as the row. One pixel per call. On a desktop that is
+     two calls and nobody sees 66 become 67. On a phone the URL bar collapsing
+     and re-expanding is a resize, so the header grew a pixel per scroll
+     gesture, without limit, and carried every hero's top padding with it.
+     Measured on a 393px viewport: 67, 68, 69, 70, 71, 72, 73 over six
+     gestures.
+
+     So the row's height must come from somewhere the script never writes. If
+     these are ever collapsed back into one token the drift comes back; the
+     gate at tests/gates/navsteady.mjs is there to say so. */
+  --nav-bar: 66px;
+  --nav-h: calc(var(--nav-bar) + 1px);
   /* The bar's cap holds its own gutters INSIDE it -- .nav-in carries the
      padding -- so to put the masthead on the same vertical as the headline
      the cap has to be the measure PLUS the two gutters. Capped at the measure
@@ -256,7 +279,11 @@ strong { font-weight: var(--w-strong); }
   display: flex;
   align-items: center;
   gap: clamp(12px, 2vw, 30px);
-  height: var(--nav-h);
+  /* --nav-bar, NOT --nav-h. --nav-h is what nav.js measures off this bar and
+     writes back to the root; reading it here would make the measurement its
+     own input and the header would gain the border's pixel on every pass.
+     The note in tokens.css has the measurements. */
+  height: var(--nav-bar);
   padding-inline: var(--pad);
   max-width: var(--nav-max, 1560px);
   margin-inline: auto;
