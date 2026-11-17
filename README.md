@@ -1,25 +1,25 @@
-# WJCF — website design preview
+# WJCF website preview
 
-A static preview of the WJCF website design, published here so it can be
-opened and reviewed in a browser before the production build begins.
+The WJCF website as it stands, published here so it can be opened and reviewed
+in a browser.
 
-**This is a preview, not the product.** It is a single pre-rendered HTML page
-with its images beside it. There is no build step, no framework and no
-dependencies — the repository is exactly what the browser receives. The real
-site will be rebuilt as a Vite project; this exists so the design can be
-agreed first.
+**This is the site's real build, but not the live site.** These files are what
+the production project's Vite build produces, with links made relative so the
+page works at this address. Nothing here is edited by hand. Each update
+replaces the whole build.
 
 ## Looking at it
 
-Open the GitHub Pages URL on the repository's **About** panel, or run it
-locally — any static server from the repository root will do:
+Open the GitHub Pages link on the repository's **About** panel. To run it
+locally, serve the repository root with any static server:
 
 ```bash
 python -m http.server 8000
 # then open http://127.0.0.1:8000/
 ```
 
-Opening `index.html` directly off the filesystem also works.
+Opening `index.html` straight off the disk does not work, because browsers
+block the page's script there.
 
 ## What to look at
 
@@ -31,25 +31,24 @@ Two things behave differently depending on the width of your window:
 - **Above 1040px** the five parts sit in the header as tabs.
 - **Below 1040px** the tabs are replaced by a single gold control. Pressing it
   floods the screen with navy from under your finger, and the menu's
-  destinations are revealed by the edge of that ink passing over them. The
-  masthead is painted by the same circle, so the whole header and page flood
-  as one sheet.
+  destinations are revealed by the edge of that ink passing over them.
 
 Narrow the window past 1040px, or open it on a phone, to see it.
 
 ## What is not finished
 
-- **Two of the nine portraits are missing.** Dr. Aggarwal and Ms. Chakraborty
-  show a square with their initials. That is deliberate: it says a photograph
-  has not arrived, rather than showing someone else's face.
 - **Copy is the client's current text**, not final editorial.
+- **Ms Chakraborty's photograph** was cropped tighter than the rest of the
+  set, so her shoulders are continued past its edges to frame her like
+  everyone else. An uncropped original would replace that.
 
 ## Contents
 
 ```
-index.html     the whole page: markup, styles and script in one file
-_assets/       photographs, brand marks, the annual report PDF
-.nojekyll      stops GitHub Pages hiding _assets (Jekyll drops _ folders)
+index.html       the page
+assets/build/    its stylesheet, script and fonts, named by content
+assets/          photographs, portraits, brand marks, the annual report
+.nojekyll        serves the files exactly as they are
 ```
 
 ---
