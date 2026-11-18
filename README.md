@@ -41,6 +41,11 @@ Narrow the window past 1040px, or open it on a phone, to see it.
 - **Ms Chakraborty's photograph** was cropped tighter than the rest of the
   set, so her shoulders are continued past its edges to frame her like
   everyone else. An uncropped original would replace that.
+- **Impact ("Solutions in action")** is a wall of 22 stories, filtered by
+  six ways of working. Nineteen titles, the tagging and the one-line
+  description of each way of working were written by the web team and need
+  the client's review. Seven photographs are stand-ins that show other work,
+  and each is marked "Stand-in photo" on the page.
 
 ## Contents
 
